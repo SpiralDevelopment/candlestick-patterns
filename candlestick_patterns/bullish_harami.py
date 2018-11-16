@@ -2,33 +2,25 @@ from candlestick_patterns.candlestick_finder import CandlestickFinder
 
 
 class BullishHarami(CandlestickFinder):
+    def __init__(self, target=None):
+        super().__init__(self.get_class_name(), 2, target=target)
 
-    def __init__(self):
-        super().__init__('Bullish Harami', 2)
+    def logic(self, idx):
+        candle = self.data.iloc[idx]
+        prev_candle = self.data.iloc[idx + 1 * self.multi_coeff]
 
-    def has_pattern(self,
-                    candles_df,
-                    ohlc,
-                    is_reversed):
-        super().has_pattern(candles_df,
-                            ohlc,
-                            is_reversed)
+        close = candle[self.close_column]
+        open = candle[self.open_column]
+        high = candle[self.high_column]
+        low = candle[self.low_column]
 
-        last_candle = self.data.iloc[0]
-        second_last_candle = self.data.iloc[1]
+        prev_close = prev_candle[self.close_column]
+        prev_open = prev_candle[self.open_column]
+        prev_high = prev_candle[self.high_column]
+        prev_low = prev_candle[self.low_column]
 
-        close = last_candle[self.close_column]
-        open = last_candle[self.open_column]
-        high = last_candle[self.high_column]
-        low = last_candle[self.low_column]
-
-        second_close = second_last_candle[self.close_column]
-        second_open = second_last_candle[self.open_column]
-        second_high = second_last_candle[self.high_column]
-        second_low = second_last_candle[self.low_column]
-
-        return second_close < second_open and \
-               abs(second_close - second_open) / (second_high - second_low) >= 0.7 \
+        return prev_close < prev_open and \
+               abs(prev_close - prev_open) / (prev_high - prev_low) >= 0.7 \
                and 0.3 > abs(close - open) / (high - low) >= 0.1 \
-               and high < second_open \
-               and low > second_close
+               and high < prev_open \
+               and low > prev_close

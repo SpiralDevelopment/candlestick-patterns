@@ -31,40 +31,69 @@ def __get_class_by_name(class_name):
     return getattr(module, class_name)
 
 
-def __create_object(class_name):
-    return __get_class_by_name(class_name)()
+def __create_object(class_name, target):
+    return __get_class_by_name(class_name)(target=target)
+
+
+def bullish_hanging_man(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    bullhm = __create_object('BullishHangingMan', target)
+    return bullhm.has_pattern(candles_df, ohlc, is_reversed)
+
+
+def hanging_man(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    bearhm = __create_object('HangingMan', target)
+    return bearhm.has_pattern(candles_df, ohlc, is_reversed)
 
 
 def bearish_harami(candles_df,
                    ohlc=__default_ohlc,
-                   is_reversed=False):
-    bear_harami = __create_object('BearishHarami')
+                   is_reversed=False,
+                   target=None):
+    bear_harami = __create_object('BearishHarami', target)
     return bear_harami.has_pattern(candles_df, ohlc, is_reversed)
 
 
 def bullish_harami(candles_df,
                    ohlc=__default_ohlc,
-                   is_reversed=False):
-    bull_harami = __create_object('BullishHarami')
+                   is_reversed=False,
+                   target=None):
+    bull_harami = __create_object('BullishHarami', target)
     return bull_harami.has_pattern(candles_df, ohlc, is_reversed)
 
 
 def dark_cloud_cover(candles_df,
                      ohlc=__default_ohlc,
-                     is_reversed=False):
-    dcc = __create_object('DarkCloudCover')
+                     is_reversed=False,
+                     target=None):
+    dcc = __create_object('DarkCloudCover', target)
     return dcc.has_pattern(candles_df, ohlc, is_reversed)
 
 
 def doji(candles_df,
          ohlc=__default_ohlc,
-         is_reversed=False):
-    doji = __create_object('DarkCloudCover')
+         is_reversed=False,
+         target=None):
+    doji = __create_object('Doji', target)
+    return doji.has_pattern(candles_df, ohlc, is_reversed)
+
+
+def doji_star(candles_df,
+              ohlc=__default_ohlc,
+              is_reversed=False,
+              target=None):
+    doji = __create_object('DojiStar', target)
     return doji.has_pattern(candles_df, ohlc, is_reversed)
 
 
 def dragonfly_doji(candles_df,
                    ohlc=__default_ohlc,
-                   is_reversed=False):
-    doji = __create_object('DragonflyDoji')
+                   is_reversed=False,
+                   target=None):
+    doji = __create_object('DragonflyDoji', target)
     return doji.has_pattern(candles_df, ohlc, is_reversed)

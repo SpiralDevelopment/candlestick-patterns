@@ -2,23 +2,17 @@ from candlestick_patterns.candlestick_finder import CandlestickFinder
 
 
 class Doji(CandlestickFinder):
-    def __init__(self):
-        super().__init__('Doji', 1)
+    
+    def __init__(self, target=None):
+        super().__init__(self.get_class_name(), 1, target=target)
 
-    def has_pattern(self,
-                    candles_df,
-                    ohlc,
-                    is_reversed):
-        super().has_pattern(candles_df,
-                            ohlc,
-                            is_reversed)
+    def logic(self, idx):
+        candle = self.data.iloc[idx]
 
-        last_candle = self.data.iloc[0]
-
-        close = last_candle[self.close_column]
-        open = last_candle[self.open_column]
-        high = last_candle[self.high_column]
-        low = last_candle[self.low_column]
+        close = candle[self.close_column]
+        open = candle[self.open_column]
+        high = candle[self.high_column]
+        low = candle[self.low_column]
 
         return abs(close - open) / (high - low) < 0.1 and \
                (high - max(close, open)) > (3 * abs(close - open)) and \

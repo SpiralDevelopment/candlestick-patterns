@@ -3,8 +3,7 @@ from pandas.api.types import is_numeric_dtype
 
 
 class CandlestickFinder(object):
-
-    def __init__(self, name, required_count):
+    def __init__(self, name, required_count, target=None):
         self.name = name
         self.required_count = required_count
         self.close_column = 'close'
@@ -12,16 +11,49 @@ class CandlestickFinder(object):
         self.low_column = 'low'
         self.high_column = 'high'
         self.data = None
+        self.is_data_prepared = False
+        self.multi_coeff = -1
+
+        if target:
+            self.target = target
+        else:
+            self.target = self.name
+
+    def get_class_name(self):
+        return self.__class__.__name__
+
+    def logic(self, idx):
+        raise Exception('Implement the logic of the ' + self.get_class_name())
 
     def has_pattern(self,
                     candles_df,
                     ohlc,
                     is_reversed):
         self.prepare_data(candles_df,
-                          ohlc,
-                          is_reversed)
+                          ohlc)
 
-    def prepare_data(self, candles_df, ohlc, is_reversed):
+        if self.is_data_prepared:
+            bool_results = self.required_count * [None]
+            length = len(candles_df)
+
+            if is_reversed:
+                self.multi_coeff = 1
+
+                for idx in range(length - self.required_count, -1, -1):
+                    bool_results.append(self.logic(idx))
+            else:
+                self.multi_coeff = -1
+
+                for idx in range(self.required_count, length, 1):
+                    bool_results.append(self.logic(idx))
+
+            candles_df[self.target] = pd.Series(bool_results)
+
+            return candles_df
+        else:
+            raise Exception('Data is not prepared to detect patterns')
+
+    def prepare_data(self, candles_df, ohlc):
 
         if isinstance(candles_df, pd.DataFrame):
 
@@ -38,22 +70,21 @@ class CandlestickFinder(object):
                     raise Exception('Provide list of four elements indicating columns in strings. '
                                     'Default: open, high, low, close')
 
-                if not is_numeric_dtype(candles_df[self.close_column]):
-                    candles_df[self.close_column] = pd.to_numeric(candles_df[self.close_column])
+                self.data = candles_df.copy()
 
-                if not is_numeric_dtype(candles_df[self.open_column]):
-                    candles_df[self.open_column] = pd.to_numeric(candles_df[self.open_column])
+                if not is_numeric_dtype(self.data[self.close_column]):
+                    self.data[self.close_column] = pd.to_numeric(self.data[self.close_column])
 
-                if not is_numeric_dtype(candles_df[self.low_column]):
-                    candles_df[self.low_column] = pd.to_numeric(candles_df[self.low_column])
+                if not is_numeric_dtype(self.data[self.open_column]):
+                    self.data[self.open_column] = pd.to_numeric(self.data[self.open_column])
 
-                if not is_numeric_dtype(candles_df[self.high_column]):
-                    candles_df[self.high_column] = pd.to_numeric(candles_df[self.high_column])
+                if not is_numeric_dtype(self.data[self.low_column]):
+                    self.data[self.low_column] = pd.to_numeric(self.data[self.low_column])
 
-                if not is_reversed:
-                    self.data = candles_df.iloc[::-1]
-                else:
-                    self.data = candles_df
+                if not is_numeric_dtype(self.data[self.high_column]):
+                    self.data[self.high_column] = pd.to_numeric(candles_df[self.high_column])
+
+                self.is_data_prepared = True
             else:
                 raise Exception('{0} requires at least {1} data'.format(self.name,
                                                                         self.required_count))
