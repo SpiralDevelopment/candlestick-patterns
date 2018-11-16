@@ -1,8 +1,7 @@
-from candlestick_patterns.candlestick_finder import CandlestickFinder
+from candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
-class Doji(CandlestickFinder):
-    
+class Hammer(CandlestickFinder):
     def __init__(self, target=None):
         super().__init__(self.get_class_name(), 1, target=target)
 
@@ -14,6 +13,6 @@ class Doji(CandlestickFinder):
         high = candle[self.high_column]
         low = candle[self.low_column]
 
-        return abs(close - open) / (high - low) < 0.1 and \
-               (high - max(close, open)) > (3 * abs(close - open)) and \
-               (min(close, open) - low) > (3 * abs(close - open))
+        return (((high - low) > 3 * (open - close)) and
+                ((close - low) / (.001 + high - low) > 0.6) and
+                ((open - low) / (.001 + high - low) > 0.6))

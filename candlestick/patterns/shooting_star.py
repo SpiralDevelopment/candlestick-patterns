@@ -1,7 +1,7 @@
-from candlestick_patterns.candlestick_finder import CandlestickFinder
+from candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
-class BearishHarami(CandlestickFinder):
+class ShootingStar(CandlestickFinder):
     def __init__(self, target=None):
         super().__init__(self.get_class_name(), 2, target=target)
 
@@ -19,9 +19,6 @@ class BearishHarami(CandlestickFinder):
         prev_high = prev_candle[self.high_column]
         prev_low = prev_candle[self.low_column]
 
-        return prev_close > prev_open and \
-               abs(prev_close - prev_open) / (prev_high - prev_low) >= 0.7 and \
-               0.3 > abs(close - open) / (high - low) >= 0.1 and \
-               high < prev_close and \
-               low > prev_open
-
+        return (prev_open < prev_close < open and
+                high - max(open, close) >= abs(open - close) * 3 and
+                min(close, open) - low <= abs(open - close))

@@ -1,8 +1,7 @@
-from candlestick_patterns.candlestick_finder import CandlestickFinder
+from candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
-class DojiStar(CandlestickFinder):
-
+class BullishHarami(CandlestickFinder):
     def __init__(self, target=None):
         super().__init__(self.get_class_name(), 2, target=target)
 
@@ -20,10 +19,12 @@ class DojiStar(CandlestickFinder):
         prev_high = prev_candle[self.high_column]
         prev_low = prev_candle[self.low_column]
 
-        return prev_close > prev_open and \
-               abs(prev_close - prev_open) / (prev_high - prev_low) >= 0.7 and \
-               abs(close - open) / (high - low) < 0.1 and \
-               prev_close < close and \
-               prev_close < open and \
-               (high - max(close, open)) > (3 * abs(close - open)) and \
-               (min(close, open) - low) > (3 * abs(close - open))
+        # return (prev_close < prev_open and
+        #        abs(prev_close - prev_open) / (prev_high - prev_low) >= 0.7
+        #        and 0.3 > abs(close - open) / (high - low) >= 0.1
+        #        and high < prev_open
+        #        and low > prev_close)
+        
+        return (prev_open > prev_close and
+                prev_close <= open < close <= prev_open and
+                close - open < prev_open - prev_close)

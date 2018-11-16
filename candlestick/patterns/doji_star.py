@@ -1,8 +1,8 @@
-from candlestick_patterns.candlestick_finder import CandlestickFinder
+from candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
-class DarkCloudCover(CandlestickFinder):
-    
+class DojiStar(CandlestickFinder):
+
     def __init__(self, target=None):
         super().__init__(self.get_class_name(), 2, target=target)
 
@@ -22,7 +22,8 @@ class DarkCloudCover(CandlestickFinder):
 
         return prev_close > prev_open and \
                abs(prev_close - prev_open) / (prev_high - prev_low) >= 0.7 and \
-               close < open and \
-               abs(close - open) / (high - low) >= 0.7 and \
-               open >= prev_close and \
-               prev_open < close < (prev_open + prev_close) / 2
+               abs(close - open) / (high - low) < 0.1 and \
+               prev_close < close and \
+               prev_close < open and \
+               (high - max(close, open)) > (3 * abs(close - open)) and \
+               (min(close, open) - low) > (3 * abs(close - open))
