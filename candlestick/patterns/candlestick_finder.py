@@ -22,8 +22,8 @@ class CandlestickFinder(object):
     def get_class_name(self):
         return self.__class__.__name__
 
-    def logic(self, idx):
-        raise Exception('Implement the logic of the ' + self.get_class_name())
+    def logic(self, row_idx):
+        raise Exception('Implement the logic of ' + self.get_class_name())
 
     def has_pattern(self,
                     candles_df,
@@ -33,21 +33,32 @@ class CandlestickFinder(object):
                           ohlc)
 
         if self.is_data_prepared:
-            bool_results = self.required_count * [None]
-            length = len(candles_df)
+            results = []
+            rows_len = len(candles_df)
+            idxs = candles_df.index.values
 
             if is_reversed:
                 self.multi_coeff = 1
 
-                for idx in range(length - self.required_count, -1, -1):
-                    bool_results.append(self.logic(idx))
+                for row_idx in range(rows_len - 1, -1, -1):
+
+                    if row_idx <= rows_len - self.required_count:
+                        results.append([idxs[row_idx], self.logic(row_idx)])
+                    else:
+                        results.append([idxs[row_idx], None])
+
             else:
                 self.multi_coeff = -1
 
-                for idx in range(self.required_count, length, 1):
-                    bool_results.append(self.logic(idx))
+                for row in range(0, rows_len, 1):
 
-            candles_df[self.target] = pd.Series(bool_results)
+                    if row >= self.required_count - 1:
+                        results.append([idxs[row], self.logic(row)])
+                    else:
+                        results.append([idxs[row], None])
+
+            candles_df = candles_df.join(pd.DataFrame(results, columns=['row', self.target]).set_index('row'),
+                                         how='outer')
 
             return candles_df
         else:
@@ -68,7 +79,7 @@ class CandlestickFinder(object):
                     self.close_column = ohlc[3]
                 else:
                     raise Exception('Provide list of four elements indicating columns in strings. '
-                                    'Default: open, high, low, close')
+                                    'Default: [open, high, low, close]')
 
                 self.data = candles_df.copy()
 

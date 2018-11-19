@@ -1,4 +1,4 @@
-from candlestick_patterns.candlestick_finder import CandlestickFinder
+from candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
 class DragonflyDoji(CandlestickFinder):
