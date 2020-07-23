@@ -68,10 +68,10 @@ All pattern detection methods receive 3 parametrs:
 
 If this project helped you in any way and you feel like buying a cup of coffee :coffee::
 
-BTC: 1PUGs6mxcW2W3SJi95aG8GvRQRJsoFHWWQ
+* **BTC:** 1PUGs6mxcW2W3SJi95aG8GvRQRJsoFHWWQ
 
-ETH: 0x66615e09f7f46429e7620ffbf78479879bbab41d
+* **ETH:** 0x66615e09f7f46429e7620ffbf78479879bbab41d
 
-LTC: LRxYMgEXMumwxYdimZo9EJ5CfBcipD5c3n
+* **LTC:** LRxYMgEXMumwxYdimZo9EJ5CfBcipD5c3n
 
 
