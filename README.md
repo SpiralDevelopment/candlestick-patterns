@@ -62,3 +62,16 @@ All pattern detection methods receive 3 parametrs:
 * target (String) - Indicates the column to which the result of detection is saved as boolean. 
 * is_reversed (Bool) - Pass True if rows in dataframe are in time descending order, otherwise False. Deafult is False.
 * ohlc (List) - Pass list of strings which indicates the column names of open/high/low/close prices in dataframe. Default: ["open", "high", "low", "close"]. 
+
+
+## Support
+
+If this project helped you in any way and you feel like buying a cup of coffee :coffee::
+
+BTC: 1PUGs6mxcW2W3SJi95aG8GvRQRJsoFHWWQ
+
+ETH: 0x66615e09f7f46429e7620ffbf78479879bbab41d
+
+LTC: LRxYMgEXMumwxYdimZo9EJ5CfBcipD5c3n
+
+
